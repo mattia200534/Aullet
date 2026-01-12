@@ -1,0 +1,50 @@
+import 'package:applicazione/services/auth_service.dart';
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class AuthViewModel extends ChangeNotifier {
+  final _authService = AuthService();
+
+  bool _isloading = false;
+  String? _errorMessage;
+
+  bool get isLoading => _isloading;
+  String? get errorMessage => _errorMessage;
+
+  Future<void> register(String email, String password) async {
+    _setloading(true);
+    try {
+      await _authService.signUp(email: email, password: password);
+    } on AuthException catch (error) {
+      _errorMessage = error.message;
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _setloading(false);
+    }
+  }
+
+  Future<void> login(String email, String password) async {
+    _setloading(true);
+    try {
+      await _authService.signIn(email: email, password: password);
+    } on AuthException catch (error) {
+      _errorMessage = error.message;
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _setloading(false);
+    }
+  }
+
+  Future<void> Logout() async {
+    await _authService.signOut();
+    notifyListeners();
+  }
+
+  void _setloading(bool value) {
+    _isloading = value;
+    if (value) _errorMessage = null;
+    notifyListeners();
+  }
+}
