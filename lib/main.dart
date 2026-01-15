@@ -1,6 +1,8 @@
 import 'package:applicazione/viewmodel/auth_view_model.dart';
+import 'package:applicazione/viewmodel/profile_viewmodel.dart';
 import 'package:applicazione/views/home_view.dart';
 import 'package:applicazione/views/login_view.dart';
+import 'package:applicazione/views/profile/profile_view.dart';
 import 'package:applicazione/views/signup_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -25,15 +27,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthViewModel())],
-      child: MaterialApp(
-        title: 'Aullet',
-        theme: ThemeData(useMaterial3: true),
-        initialRoute: '/login',
-        routes: {
-          '/login': (context) => const LoginView(),
-          '/signup': (context) => const SignupView(),
-          '/home': (context) => const HomeView(),
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfileViewModel()),
+      ],
+      child: Consumer<AuthViewModel>(
+        builder: (context, authVM, _) {
+          return MaterialApp(
+            title: 'Aullet',
+            theme: ThemeData(useMaterial3: true),
+            home: AuthViewModel().isLoading
+                ? const HomeView()
+                : const LoginView(),
+            routes: {
+              '/login': (_) => const LoginView(),
+              '/signup': (_) => const SignupView(),
+              '/home': (_) => const HomeView(),
+              '/profile': (_) => const ProfileView(),
+            },
+          );
         },
       ),
     );

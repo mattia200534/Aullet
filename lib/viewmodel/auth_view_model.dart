@@ -7,14 +7,26 @@ class AuthViewModel extends ChangeNotifier {
 
   bool _isloading = false;
   String? _errorMessage;
+  bool _isLoggedIn = false;
 
   bool get isLoading => _isloading;
   String? get errorMessage => _errorMessage;
+  bool get isLoggedIn => _isLoggedIn;
+
+  AuthViewModel() {
+    checkCurrentUser();
+  }
+
+  void checkCurrentUser() {
+    _isLoggedIn = _authService.currentUser != null;
+    notifyListeners();
+  }
 
   Future<void> register(String email, String password) async {
     _setloading(true);
     try {
       await _authService.signUp(email: email, password: password);
+      _isLoggedIn = true;
     } on AuthException catch (error) {
       _errorMessage = error.message;
     } catch (e) {
@@ -28,6 +40,8 @@ class AuthViewModel extends ChangeNotifier {
     _setloading(true);
     try {
       await _authService.signIn(email: email, password: password);
+
+      _isLoggedIn = true;
     } on AuthException catch (error) {
       _errorMessage = error.message;
     } catch (e) {
@@ -39,6 +53,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<void> Logout() async {
     await _authService.signOut();
+    _isLoggedIn = false;
     notifyListeners();
   }
 
