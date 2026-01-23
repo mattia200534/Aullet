@@ -1,3 +1,4 @@
+import 'package:applicazione/viewmodel/auth_view_model.dart';
 import 'package:applicazione/viewmodel/profile_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,47 +19,85 @@ class _ProfileViewState extends State<ProfileView> {
     super.didChangeDependencies();
     if (!_didScheduleLoad) {
       _didScheduleLoad = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) async{
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         final vm = context.read<ProfileViewModel>();
         await vm.loadProfile();
-        await context.read<ProfileViewModel>().loadProfile();
-        if(mounted && vm.profile != null){
+        if (!mounted) return;
+        if (vm.profile != null) {
           _nameCtrl.text = vm.profile!.displayname;
         }
       });
-      }
     }
-    
-      @override
-      Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-      }
   }
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ProfileViewModel>();
-
+    final authVM = context.read<AuthViewModel>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Profilo')),
+      appBar: AppBar(
+        title: const Text('Profilo'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await authVM.Logout();
+              if (!mounted) return;
+              Navigator.of(
+                context,
+              ).pushNamedAndRemoveUntil('/login', (route) => false);
+            },
+          ),
+        ],
+      ),
       body: vm.isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: Stack(
+                alignment: Alignment.bottomRight,
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: vm.profile?.avatarUrl != null
-                        ? NetworkImage(vm.profile!.avatarUrl!)
-                        : null,
-                    child: vm.profile?.avatarUrl == null
-                        ? const Icon(Icons.person, size: 50)
-                        : null,
+                  GestureDetector(
+                    onTap: () => vm.pickAndUploadAvatar(),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: vm.profile?.avatarUrl != null
+                          ? NetworkImage(vm.profile!.avatarUrl!)
+                          : null,
+                      child: vm.profile?.avatarUrl == null
+                          ? const Icon(Icons.person, size: 50)
+                          : null,
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Logout'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: () async {
+                      await authVM.Logout();
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/login',
+                        (route) => false,
+                      );
+                    },
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black54,
+                    ),
+                    padding: const EdgeInsets.all(4.0),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                   TextButton(
-                    onPressed: vm.pickAndUploadAvatar,
+                    onPressed: () => vm.pickAndUploadAvatar(),
                     child: const Text('Cambia Avatar'),
                   ),
                   TextField(
@@ -80,5 +119,11 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    super.dispose();
   }
 }
