@@ -1,10 +1,13 @@
 import 'package:applicazione/viewmodel/auth_view_model.dart';
 import 'package:applicazione/viewmodel/category_view_model.dart';
+import 'package:applicazione/viewmodel/expense_viewmodel.dart';
 import 'package:applicazione/viewmodel/profile_viewmodel.dart';
+import 'package:applicazione/viewmodel/statistics_viewmodel.dart';
 import 'package:applicazione/views/home_view.dart';
 import 'package:applicazione/views/login_view.dart';
 import 'package:applicazione/views/profile/profile_view.dart';
 import 'package:applicazione/views/signup_view.dart';
+import 'package:applicazione/views/statics/statics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +35,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
+        ChangeNotifierProvider(create: (_) => StatisticsViewModel()),
+        ChangeNotifierProvider(create: (_) => ExpenseViewmodel()),
       ],
       child: Consumer<AuthViewModel>(
         builder: (context, authVM, _) {
@@ -46,6 +51,7 @@ class MyApp extends StatelessWidget {
               '/signup': (_) => const SignupView(),
               '/home': (_) => const HomeView(),
               '/profile': (_) => const ProfileView(),
+              '/statistics': (_) => const StaticsView(),
             },
           );
         },

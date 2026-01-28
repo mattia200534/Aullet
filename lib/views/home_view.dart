@@ -92,6 +92,28 @@ class _HomeViewState extends State<HomeView> {
                 });
               },
             ),
+            BottomAppBar(
+              shape: const CircularNotchedRectangle(),
+              notchMargin: 6,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(icon: const Icon(Icons.home), onPressed: () {}),
+                  IconButton(
+                    icon: const Icon(Icons.person),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/profile');
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.bar_chart),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/statistics');
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       );
