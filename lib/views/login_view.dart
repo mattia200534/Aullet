@@ -36,7 +36,7 @@ class _LoginViewState extends State<LoginView> {
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: () async {
-                      await vm.register(_emailctrl.text, _pwctrl.text);
+                      await vm.login(_emailctrl.text, _pwctrl.text);
                       if (vm.errorMessage == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(vm.errorMessage!)),

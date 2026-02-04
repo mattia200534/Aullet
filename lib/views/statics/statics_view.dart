@@ -283,7 +283,19 @@ class _StaticsViewState extends State<StaticsView> {
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: _doCompare,
-                        child: const Text('Confronta Periodi'),
+                        child: const Text(
+                          'Confronta Periodi',
+                          style: TextStyle(color: Colors.white),
+                        ),
+
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                          backgroundColor: Colors.green,
+                        ),
                       ),
                       const SizedBox(height: 24),
                       if (_comparison != null) ...[
@@ -372,7 +384,7 @@ class _StaticsViewState extends State<StaticsView> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon: const Icon(Icons.home),
+              icon: const Icon(Icons.home, color: Colors.redAccent),
               onPressed: () => Navigator.pushNamedAndRemoveUntil(
                 context,
                 '/home',
@@ -380,10 +392,13 @@ class _StaticsViewState extends State<StaticsView> {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.person),
+              icon: const Icon(Icons.person, color: Colors.orange),
               onPressed: () => Navigator.pushNamed(context, '/profile'),
             ),
-            IconButton(icon: const Icon(Icons.bar_chart), onPressed: () {}),
+            IconButton(
+              icon: const Icon(Icons.bar_chart, color: Colors.blue),
+              onPressed: () {},
+            ),
           ],
         ),
       ),

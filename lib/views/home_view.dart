@@ -39,15 +39,21 @@ class _HomeViewState extends State<HomeView> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon: const Icon(Icons.home),
+              icon: const Icon(Icons.home, color: Colors.redAccent),
               onPressed: () {
                 // Naviga alla home
               },
             ),
             IconButton(
-              icon: const Icon(Icons.person),
+              icon: const Icon(Icons.person, color: Colors.orange),
               onPressed: () {
                 Navigator.of(context).pushNamed('/profile');
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.bar_chart, color: Colors.blue),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/statistics');
               },
             ),
           ],
@@ -62,7 +68,7 @@ class _HomeViewState extends State<HomeView> {
             context.read<ExpenseViewmodel>().loadExpenses();
           });
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.green),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
@@ -77,43 +83,9 @@ class _HomeViewState extends State<HomeView> {
           children: [
             const Text(
               'Non ci sono spese inserite',
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.add),
-              label: const Text('Aggiungi Spesa'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const NewExpenseView()),
-                ).then((_) {
-                  context.read<ExpenseViewmodel>().loadExpenses();
-                });
-              },
-            ),
-            BottomAppBar(
-              shape: const CircularNotchedRectangle(),
-              notchMargin: 6,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(icon: const Icon(Icons.home), onPressed: () {}),
-                  IconButton(
-                    icon: const Icon(Icons.person),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/profile');
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.bar_chart),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/statistics');
-                    },
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       );
