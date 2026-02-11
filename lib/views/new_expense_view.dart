@@ -1,5 +1,9 @@
+import 'package:applicazione/models/category.dart';
+import 'package:applicazione/utils/icon_map.dart';
+import 'package:applicazione/viewmodel/category_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NewExpenseView extends StatefulWidget {
@@ -18,12 +22,16 @@ class _NewExpenseViewState extends State<NewExpenseView> {
   DateTime _selectedDate = DateTime.now();
   String? _selectedCategoryId;
 
-  final List<Map<String, dynamic>> _categories = [
-    {'id': '1', 'name': 'Igiene', 'icon': Icons.cleaning_services},
-    {'id': '2', 'name': 'Alimentari', 'icon': Icons.shopping_cart},
-    {'id': '3', 'name': 'Trasporto', 'icon': Icons.directions_car},
-    {'id': '4', 'name': 'Casa', 'icon': Icons.home},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final catVM = context.read<CategoryViewModel>();
+      if (catVM.categories.isEmpty && !catVM.isLoading) {
+        catVM.loadCategories();
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -103,6 +111,8 @@ class _NewExpenseViewState extends State<NewExpenseView> {
 
   @override
   Widget build(BuildContext context) {
+    final catVM = context.watch<CategoryViewModel>();
+    final categories = catVM.categories;
     final dateString = DateFormat('dd/MM/yyyy').format(_selectedDate);
 
     return Scaffold(
@@ -137,21 +147,27 @@ class _NewExpenseViewState extends State<NewExpenseView> {
                 ),
                 value: _selectedCategoryId,
                 icon: const Icon(Icons.arrow_drop_down),
-                items: _categories.map((cat) {
+                hint: Text(
+                  catVM.isLoading ? 'Caricamento categorie...' : 'Seleziona',
+                ),
+                items: categories.map((Category cat) {
+                  final IconData = iconMap[cat.icon] ?? Icons.category;
                   return DropdownMenuItem<String>(
-                    value: cat['id'],
+                    value: cat.id,
                     child: Row(
                       children: [
-                        Icon(cat['icon'], color: Colors.teal, size: 20),
+                        Icon(IconData, color: Colors.teal, size: 20),
                         const SizedBox(width: 10),
-                        Text(cat['name']),
+                        Text(cat.name),
                       ],
                     ),
                   );
                 }).toList(),
-                onChanged: (value) {
-                  setState(() => _selectedCategoryId = value);
-                },
+                onChanged: categories.isEmpty
+                    ? null
+                    : (value) {
+                        setState(() => _selectedCategoryId = value);
+                      },
                 validator: (value) =>
                     value == null ? 'Campo obbligatorio' : null,
               ),

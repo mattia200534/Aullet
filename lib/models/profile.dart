@@ -1,4 +1,4 @@
-class Profile{
+class Profile {
   final String id;
   final String userId;
   String displayname;
@@ -11,14 +11,15 @@ class Profile{
     this.avatarUrl,
   });
 
-  factory Profile.fromMap(Map<String, dynamic> map)=>Profile(
-      id: map['id'] as String,
-      userId: map['userId'] as String,
-      displayname: map['displayname'] as String,
-      avatarUrl: map['avatarUrl'] as String?,
-    );
+  factory Profile.fromMap(Map<String, dynamic> map) => Profile(
+    id: map['id'] as String,
+    userId: map['user_id'] as String,
+    displayname: map['display_name'] as String,
+    avatarUrl: map['avatar_url'] as String?,
+  );
 
-  Map<String, dynamic> toMap()=> {
+  Map<String, dynamic> toMap() => {
+    'user_id': userId,
     'display_name': displayname,
     'avatar_url': avatarUrl,
   };

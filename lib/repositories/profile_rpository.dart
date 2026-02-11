@@ -8,11 +8,11 @@ class ProfileRepository {
     final data = await _client
         .from('profiles')
         .select()
-        .eq('userId', userId)
+        .eq('user_id', userId)
         .maybeSingle();
 
     if (data == null) return null;
-    return Profile.fromMap(data as Map<String, dynamic>);
+    return Profile.fromMap(data);
   }
 
   Future<void> createProfile(Profile profile) async {

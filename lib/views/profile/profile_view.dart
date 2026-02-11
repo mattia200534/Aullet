@@ -157,10 +157,6 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                       ),
                     ),
-
-                    const SizedBox(height: 24),
-
-                    /// ERRORE
                     if (vm.error != null) ...[
                       const SizedBox(height: 16),
                       Text(
@@ -168,6 +164,10 @@ class _ProfileViewState extends State<ProfileView> {
                         style: const TextStyle(color: Colors.red),
                       ),
                     ],
+
+                    const SizedBox(height: 24),
+
+                    /// ERRORE
                   ],
                 ),
               ),
