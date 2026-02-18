@@ -1,4 +1,5 @@
 import 'package:applicazione/services/auth_service.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -25,15 +26,15 @@ class AuthViewModel extends ChangeNotifier {
   Future<void> register(String email, String password) async {
     _setloading(true);
     try {
-      await _authService.signUp(email: email, password: password);
+      await _authService
+          .signUp(email: email, password: password)
+          .timeout(const Duration(seconds: 15));
       _isLoggedIn = true;
+    } on TimeoutException {
+      _errorMessage = 'Timeout durante la registrazione. Riprova.';
     } on AuthException catch (error) {
       _errorMessage = error.message;
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      _setloading(false);
-    }
+    } catch (e) {}
   }
 
   Future<void> login(String email, String password) async {
@@ -51,7 +52,7 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> Logout() async {
+  Future<void> logout() async {
     await _authService.signOut();
     _isLoggedIn = false;
     notifyListeners();

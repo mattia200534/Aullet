@@ -37,12 +37,12 @@ class _SignupViewState extends State<SignupView> {
                 : ElevatedButton(
                     onPressed: () async {
                       await vm.register(_emailctrl.text, _pwctrl.text);
-                      if (vm.errorMessage == null) {
+                      if (vm.errorMessage != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(vm.errorMessage!)),
                         );
                       } else {
-                        Navigator.pushReplacementNamed(context, '/login');
+                        Navigator.pushReplacementNamed(context, '/home');
                       }
                     },
                     child: const Text('Registrati'),

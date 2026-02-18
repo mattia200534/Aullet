@@ -45,7 +45,7 @@ class _ProfileViewState extends State<ProfileView> {
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.red),
             onPressed: () async {
-              await authVM.Logout();
+              await authVM.logout();
               if (!mounted) return;
               Navigator.pushNamedAndRemoveUntil(
                 context,
