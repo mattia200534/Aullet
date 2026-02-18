@@ -38,7 +38,7 @@ class _LoginViewState extends State<LoginView> {
                     onPressed: () async {
                       await vm.login(_emailctrl.text, _pwctrl.text);
                       if (!context.mounted) return;
-                      if (vm.errorMessage == null) {
+                      if (vm.errorMessage != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(vm.errorMessage!)),
                         );
