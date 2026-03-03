@@ -300,16 +300,16 @@ class _StaticsViewState extends State<StaticsView> {
                       const SizedBox(height: 24),
                       if (_comparison != null) ...[
                         Text(
-                          'Totale Periodo 1: ${_comparison!['total1'].toStringAsFixed(2)}€',
+                          'Totale Periodo 1: ${_comparison!['period1'].toStringAsFixed(2)}€',
                         ),
                         Text(
-                          'Totale Periodo 2: ${_comparison!['total2'].toStringAsFixed(2)}€',
+                          'Totale Periodo 2: ${_comparison!['period2'].toStringAsFixed(2)}€',
                         ),
                         Text(
                           'Differenza: ${_comparison!['difference'].toStringAsFixed(2)}€',
                         ),
                         Text(
-                          'Variazione %: ${_comparison!['percentChange'].toStringAsFixed(1)}%',
+                          'Variazione %: ${_comparison!['percent'].toStringAsFixed(1)}%',
                         ),
                         const SizedBox(height: 24),
 

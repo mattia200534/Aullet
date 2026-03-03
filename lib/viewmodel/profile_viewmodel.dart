@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:applicazione/models/profile.dart';
 import 'package:applicazione/repositories/profile_rpository.dart';
@@ -55,23 +55,23 @@ class ProfileViewModel extends ChangeNotifier {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked == null) return;
-    final file = File(picked.path);
-    await uploadAvatar(file);
+    final bytes = await picked.readAsBytes();
+    final extension = _extractExtension(picked.name);
+    await uploadAvatarBytes(bytes, extension);
   }
 
-  Future<void> uploadAvatar(File file) async {
+  Future<void> uploadAvatarBytes(Uint8List bytes, String extension) async {
     final client = Supabase.instance.client;
     final userId = client.auth.currentUser!.id;
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final path = 'image/$userId/$timestamp.png';
-
+    final path = '$userId/$timestamp.$extension';
     _setLoading(true);
     try {
       await client.storage
           .from('image')
-          .upload(
+          .uploadBinary(
             path,
-            file,
+            bytes,
             fileOptions: const FileOptions(cacheControl: '3600'),
           );
 
@@ -84,6 +84,14 @@ class ProfileViewModel extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  String _extractExtension(String fileName) {
+    final dotIndex = fileName.lastIndexOf('.');
+    if (dotIndex == -1 || dotIndex == fileName.length - 1) {
+      return 'jpg';
+    }
+    return fileName.substring(dotIndex + 1).toLowerCase();
   }
 
   void _setLoading(bool v) {
